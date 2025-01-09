@@ -56,10 +56,7 @@
 
 #define LOG(level, ...)                                                       \
   {                                                                           \
-    if (DWG_LOGLEVEL >= DWG_LOGLEVEL_##level)                                 \
-      {                                                                       \
-        HANDLER (OUTPUT, __VA_ARGS__);                                        \
-      }                                                                       \
+                                                                    \
   }
 #define LOG_ERROR(...)                                                        \
   {                                                                           \
@@ -110,24 +107,7 @@
     LOG_TRACE ("\n")
 #endif
 #define LOG_TRACE_TV(fmt, str, dxf)                                           \
-  if (dwg_codepage_isasian ((Dwg_Codepage)dat->codepage))                     \
-    {                                                                         \
-      char *nstr = bit_TV_to_utf8 (str, dat->codepage);                       \
-      LOG_TRACE (fmt, nstr, dxf)                                              \
-      if (nstr && nstr != str)                                                \
-        free (nstr);                                                          \
-    }                                                                         \
-  else                                                                        \
-    {                                                                         \
-      LOG_TRACE (fmt, str, dxf)                                               \
-    }                                                                         \
-  LOG_POS                                                                     \
-  if (DWG_LOGLEVEL >= DWG_LOGLEVEL_INSANE && str                              \
-      && dat->codepage != CP_ANSI_1252 && !(dat->codepage < CP_ISO_8859_1)    \
-      && strlen (str) && bit_TF_contains_high (str, strlen (str)))            \
-    {                                                                         \
-      LOG_INSANE_TF (str, strlen (str));                                      \
-    }
+{}
 
 #ifdef HAVE_NATIVE_WCHAR2
 #  define LOG_TRACE_TU(s, wstr, dxf)                                          \

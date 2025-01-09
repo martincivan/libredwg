@@ -114,100 +114,13 @@
   }
 
 #define FIELD_G_TRACE(nam, type, dxfgroup)                                    \
-  if (DWG_LOGLEVEL >= DWG_LOGLEVEL_TRACE)                                     \
-    {                                                                         \
-      char *s1 = strrplc (#nam, "[rcount1]", "[%d]");                         \
-      if (s1)                                                                 \
-        {                                                                     \
-          char *s2 = strrplc (s1, "[rcount2]", "[%d]");                       \
-          if (s2)                                                             \
-            {                                                                 \
-              GCC46_DIAG_IGNORE (-Wformat-nonliteral)                         \
-              LOG_TRACE (strcat (s2, ": " FORMAT_##type " [" #type " %d]"),   \
-                         rcount1, rcount2, _obj->nam, dxfgroup);              \
-              GCC46_DIAG_RESTORE                                              \
-              free (s2);                                                      \
-              free (s1);                                                      \
-            }                                                                 \
-          else                                                                \
-            {                                                                 \
-              GCC46_DIAG_IGNORE (-Wformat-nonliteral)                         \
-              LOG_TRACE (strcat (s1, ": " FORMAT_##type " [" #type " %d]"),   \
-                         rcount1, _obj->nam, dxfgroup);                       \
-              GCC46_DIAG_RESTORE                                              \
-              free (s1);                                                      \
-            }                                                                 \
-        }                                                                     \
-      else                                                                    \
-        LOG_TRACE (#nam ": " FORMAT_##type " [" #type " %d]",                 \
-                   (BITCODE_##type)_obj->nam, dxfgroup);                      \
-      LOG_RPOS                                                                \
-    }
+{}
 
 #define FIELD_G_TRACE_ANGLE(nam, type, dxfgroup)                              \
-  if (DWG_LOGLEVEL >= DWG_LOGLEVEL_TRACE)                                     \
-    {                                                                         \
-      char *s1 = strrplc (#nam, "[rcount1]", "[%d]");                         \
-      if (s1)                                                                 \
-        {                                                                     \
-          char *s2 = strrplc (s1, "[rcount2]", "[%d]");                       \
-          if (s2)                                                             \
-            {                                                                 \
-              GCC46_DIAG_IGNORE (-Wformat-nonliteral)                         \
-              LOG_TRACE (strcat (s2, ": " FORMAT_##type " [" #type            \
-                                 " %d] %gº"),                                 \
-                         rcount1, rcount2, _obj->nam, dxfgroup,               \
-                         rad2deg (_obj->nam));                                \
-              GCC46_DIAG_RESTORE                                              \
-              free (s2);                                                      \
-              free (s1);                                                      \
-            }                                                                 \
-          else                                                                \
-            {                                                                 \
-              GCC46_DIAG_IGNORE (-Wformat-nonliteral)                         \
-              LOG_TRACE (strcat (s1, ": " FORMAT_##type " [" #type            \
-                                 " %d] %gº"),                                 \
-                         rcount1, _obj->nam, dxfgroup, rad2deg (_obj->nam));  \
-              GCC46_DIAG_RESTORE                                              \
-              free (s1);                                                      \
-            }                                                                 \
-        }                                                                     \
-      else                                                                    \
-        LOG_TRACE (#nam ": " FORMAT_##type " [" #type " %d] %gº",             \
-                   (BITCODE_##type)_obj->nam, dxfgroup, rad2deg (_obj->nam)); \
-      LOG_RPOS                                                                \
-    }
+  {}
 
 #define FIELD_TRACE(nam, type)                                                \
-  if (DWG_LOGLEVEL >= DWG_LOGLEVEL_TRACE)                                     \
-    {                                                                         \
-      char *s1 = strrplc (#nam, "[rcount1]", "[%d]");                         \
-      if (s1)                                                                 \
-        {                                                                     \
-          char *s2 = strrplc (s1, "[rcount2]", "[%d]");                       \
-          if (s2)                                                             \
-            {                                                                 \
-              GCC46_DIAG_IGNORE (-Wformat-nonliteral)                         \
-              LOG_TRACE (strcat (s2, ": " FORMAT_##type " " #type "\n"),      \
-                         rcount1, rcount2, _obj->nam)                         \
-              GCC46_DIAG_RESTORE                                              \
-              free (s2);                                                      \
-              free (s1);                                                      \
-            }                                                                 \
-          else                                                                \
-            {                                                                 \
-              GCC46_DIAG_IGNORE (-Wformat-nonliteral)                         \
-              LOG_TRACE (strcat (s1, ": " FORMAT_##type " " #type "\n"),      \
-                         rcount1, _obj->nam)                                  \
-              GCC46_DIAG_RESTORE                                              \
-              free (s1);                                                      \
-            }                                                                 \
-        }                                                                     \
-      else                                                                    \
-        {                                                                     \
-          LOG_TRACE (#nam ": " FORMAT_##type " [" #type "]\n", _obj->nam)     \
-        }                                                                     \
-    }
+{}
 #define LOG_TF(level, var, len)                                               \
   {                                                                           \
     if (var && (DWG_LOGLEVEL >= DWG_LOGLEVEL_##level || len <= 256))          \
@@ -357,31 +270,6 @@
         ref = dwg_decode_handleref_with_code (hdl_dat, obj, dwg, code);       \
       else                                                                    \
         ref = dwg_decode_handleref (hdl_dat, obj, dwg);                       \
-      if (DWG_LOGLEVEL >= DWG_LOGLEVEL_TRACE)                                 \
-        {                                                                     \
-          if (ref)                                                            \
-            {                                                                 \
-              LOG_TRACE (#nam ": " FORMAT_REF " [H %d]", ARGS_REF (ref),      \
-                         dxf);                                                \
-              if (dwg_ref_object_silent (dwg, ref)                            \
-                  && DWG_LOGLEVEL > DWG_LOGLEVEL_TRACE)                       \
-                {                                                             \
-                  int alloced;                                                \
-                  const char *u8 = dwg_ref_tblname (dwg, ref, &alloced);      \
-                  if (u8 && *u8)                                              \
-                    HANDLER (OUTPUT, " => %s %s", dwg_ref_objname (dwg, ref), \
-                             u8);                                             \
-                  if (u8 && alloced)                                          \
-                    free ((void *)u8);                                        \
-                }                                                             \
-            }                                                                 \
-          else                                                                \
-            {                                                                 \
-              HANDLER (OUTPUT, #nam ": NULL %d [H %d]", code, dxf);           \
-            }                                                                 \
-          LOG_INSANE (" @%" PRIuSIZE ".%u", _pos / 8, (unsigned)(_pos % 8));  \
-          HANDLER (OUTPUT, "\n");                                             \
-        }                                                                     \
     }                                                                         \
   }
 #define FIELD_HANDLE(nam, code, dxf) VALUE_HANDLE (_obj->nam, nam, code, dxf)
